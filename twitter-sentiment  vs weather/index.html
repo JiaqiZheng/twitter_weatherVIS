@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Twitter Sentiment</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        body {
+            background-image: url("us.svg");
+            background-repeat: no-repeat;
+        } 
+    </style>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+    <div id="chart"></div>
+ 
+    <script>
+        d3.json("state_date_sent-more.json", function(error, data) {
+            //read sentiment data
+                    var OHscores = [];
+                    var CAscores = [];
+                    var TXscores = [];
+                    var GAscores = [];
+                    var NYscores = [];
+                    var ILsocres = [];
+                    var AKsocres = [];
+                    var AZsocres = [];
+                    var FLsocres = [];
+                    var KYsocres = [];
+                    var MIsocres = [];
+                    var MNsocres = [];
+                    var MSsocres = [];
+                    var MOsocres = [];
+                    var NEsocres = [];
+                    var NVsocres = [];
+                    var NMsocres = [];
+                    var ORsocres = [];
+
+                    var OHcounts = [];
+                    var CAcounts = [];
+                    var TXcounts = [];
+                    var GAcounts = [];
+                    var NYcounts = [];
+                    var ILcounts = [];
+                    var AKcounts = [];
+                    var AZcounts = [];
+                    var FLcounts = [];
+                    var KYcounts = [];
+                    var MIcounts = [];
+                    var MNcounts = [];
+                    var MScounts = [];
+                    var MOcounts = [];
+                    var NEcounts = [];
+                    var NVcounts = [];
+                    var NMcounts = [];
+                    var ORcounts = [];
+
+                    data.forEach(function(d) {
+                        if (d.state == "OH"){
+                            OHscores.push(d.score);
+                            OHcounts.push(d.count);
+                        }
+                        if (d.state == "CA"){
+                            CAscores.push(d.score);
+                            CAcounts.push(d.count);
+                        }
+                        if (d.state == "TX"){
+                            TXscores.push(d.score);
+                            TXcounts.push(d.count);
+                        }
+                        if (d.state == "GA"){
+                            GAscores.push(d.score);
+                            GAcounts.push(d.count);
+                        }
+                        if (d.state == "NY"){
+                            NYscores.push(d.score);
+                            NYcounts.push(d.count);
+                        }   
+                        
+                    });
+
+            //read weather data
+                    var states = ["CA","OH"];
+                    var State = "CA";
+                    var weather_type = 2;
+                    var PRC = [];
+                    var AVGT = [];
+                    var MAXT = [];
+                    var MINT = [];
+                    d3.csv("weather.csv", function(data){
+                        var weather = [];
+                        data.forEach(function(d){
+                            if (d.state==State){
+                                if (weather_type==1){
+                                    weather.push(parseFloat(d.PRC));
+                                }
+                                if (weather_type==2){
+                                    weather.push(parseFloat(d.AVGT));
+                                }
+                                if (weather_type==3){
+                                    weather.push(parseFloat(d.MAXT));
+                                }
+                                if (weather_type==4){
+                                    weather.push(parseFloat(d.MINT));
+                                }
+                            }
+                        });
+                        var scores=CAscores;
+                        var counts=CAcounts;
+                        var CA_x=200;
+                        var CA_y=300;
+                        var X=CA_x;
+                        var Y=CA_y
+                        render_barchart(State,weather,scores,counts,X,Y);
+                        render_bars(State,weather,scores,counts,X,Y);
+                        render_bars(State,weather,OHscores,OHcounts,750,190);
+                        render_bars(State,weather,OHscores,OHcounts,650,390);
+                        render_bars(State,weather,OHscores,OHcounts,350,390);
+
+
+
+
+                    })       
+            });
+        
+        var render_barchart = function(State,weather,scores,count,X,Y){
+            
+
+            //create canvas
+            var Canvas = d3.select('#chart')
+                            .append('svg')
+                            .attr('width', 1000)
+					        .attr('height', 1000)
+        };
+        var render_bars = function(State,weather,scores,count,X,Y){
+   
+            var CA_x = X;
+            var CA_y = Y;
+
+            var H=100;
+            var W=100;
+            var size = 0.50;
+
+			var height = H*size;
+			var width = W*size;
+			
+			var yScale = d3.scale.linear()
+				.domain([0, d3.max(weather)])
+				.range([0, height]);
+			var xScale = d3.scale.ordinal()
+				.domain(d3.range(0, weather.length))
+				.rangeBands([0, width])
+            var vScale = d3.scale.linear()
+				.domain([0, d3.max(weather)])
+				.range([height, 0]);
+			var hScale = d3.scale.ordinal()
+				.domain(d3.range(0, weather.length))
+				.rangeBands([0, width])
+
+            var colors1 = d3.scale.linear()
+				.domain([0,1])
+				.range(['#FFFFFF','#FF0000'])
+            var colors2 = d3.scale.linear()
+				.domain([-1,0])
+				.range(['#0000FF','#FFFFFF'])
+			//create bars		        
+			var bars = d3.select('svg')
+                        .append('g')
+                        .attr('transform','translate('+CA_x+','+CA_y+')')
+            
+                bars.selectAll('rect')
+                            .data(weather)
+                            .enter()
+                            .append('rect')
+                            .style('fill', function(d, i){
+                                        if (scores[i]>=0){return colors1(scores[i])}
+                                        else {return colors2(scores[i])}                                    
+                                })
+                            .attr('width', xScale.rangeBand()*0.8)
+                            .attr('height', function(d, i){
+                                    return yScale(d);
+                                })
+                            .attr('x', function(d, i){
+                                    return xScale(i);
+                                })
+                            .attr('y', function(d, i){
+                                    return height - yScale(d)
+                                })
+            
+            // V Axis
+            var vAxis = d3.svg.axis()
+				.scale(vScale)
+				.orient('left')
+				.ticks(5)
+				.tickPadding(5)
+
+            // H Axis
+			var hAxis = d3.svg.axis()
+				.scale(hScale)
+				.orient('bottom')
+				.tickValues(hScale.domain().filter(function(d, i){
+					return !(i % (weather.length/5));
+				}));
+
+			// V Guide
+            var vGuide = d3.select('svg')
+				.append('g')
+					vAxis(vGuide)
+					vGuide.selectAll('path')
+                    vGuide.attr('transform','translate('+(CA_x+20)+','+CA_y+')')
+						.style('fill', 'none')
+						.style('stroke', '#000')
+					vGuide.selectAll('line')
+						.style('stroke', '#000')
+			
+			// H Guide
+			var hGuide = d3.select('svg')
+				.append('g')
+                    hAxis(hGuide)
+					hGuide.attr('transform','translate('+CA_x+','+(CA_y+height-20)+')')
+					hGuide.selectAll('path')
+						.style('fill', 'none')
+						.style('stroke', '#000')
+					hGuide.selectAll('line')
+						.style('stroke', '#000')
+
+			
+		};
+        
+
+    </script>
+  </body>
+</html>
