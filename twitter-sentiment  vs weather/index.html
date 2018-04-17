@@ -8,14 +8,27 @@
         body {
             background-image: url("us.svg");
             background-repeat: no-repeat;
-        } 
+        }
     </style>
   </head>
   <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
-    <div id="chart"></div>
- 
+
+    <div id="chart" style="position: fixed; top: 0px; left: 0px"></div>
+    <div id="tool" style="position: fixed; top: 100px; left: 1000px">
+      <select id="thedropdown">
+        <option value="1">Precipitation</option>
+        <option value="2">Average Temperature</option>
+        <option value="3">Maximum Temperature</option>
+        <option value="4">Minimum Temperature</option>
+      </select>
+      <button onClick="refreshPage()">Apply</button>
+    </div>
+    
     <script>
+    function refreshPage(){
+    window.location.reload();
+}
         d3.json("state_date_sent-more.json", function(error, data) {
             //read sentiment data
                     var OHscores = [];
@@ -76,14 +89,16 @@
                         if (d.state == "NY"){
                             NYscores.push(d.score);
                             NYcounts.push(d.count);
-                        }   
-                        
+                        }
+
                     });
 
             //read weather data
+            var a = document.getElementById("thedropdown");
+
                     var states = ["CA","OH"];
                     var State = "CA";
-                    var weather_type = 2;
+                    var weather_type = a.value;
                     var PRC = [];
                     var AVGT = [];
                     var MAXT = [];
@@ -121,11 +136,11 @@
 
 
 
-                    })       
+                    })
             });
-        
+
         var render_barchart = function(State,weather,scores,count,X,Y){
-            
+
 
             //create canvas
             var Canvas = d3.select('#chart')
@@ -134,7 +149,7 @@
 					        .attr('height', 1000)
         };
         var render_bars = function(State,weather,scores,count,X,Y){
-   
+
             var CA_x = X;
             var CA_y = Y;
 
@@ -144,7 +159,7 @@
 
 			var height = H*size;
 			var width = W*size;
-			
+
 			var yScale = d3.scale.linear()
 				.domain([0, d3.max(weather)])
 				.range([0, height]);
@@ -164,18 +179,18 @@
             var colors2 = d3.scale.linear()
 				.domain([-1,0])
 				.range(['#0000FF','#FFFFFF'])
-			//create bars		        
+			//create bars
 			var bars = d3.select('svg')
                         .append('g')
                         .attr('transform','translate('+CA_x+','+CA_y+')')
-            
+
                 bars.selectAll('rect')
                             .data(weather)
                             .enter()
                             .append('rect')
                             .style('fill', function(d, i){
                                         if (scores[i]>=0){return colors1(scores[i])}
-                                        else {return colors2(scores[i])}                                    
+                                        else {return colors2(scores[i])}
                                 })
                             .attr('width', xScale.rangeBand()*0.8)
                             .attr('height', function(d, i){
@@ -187,7 +202,7 @@
                             .attr('y', function(d, i){
                                     return height - yScale(d)
                                 })
-            
+
             // V Axis
             var vAxis = d3.svg.axis()
 				.scale(vScale)
@@ -213,7 +228,7 @@
 						.style('stroke', '#000')
 					vGuide.selectAll('line')
 						.style('stroke', '#000')
-			
+
 			// H Guide
 			var hGuide = d3.select('svg')
 				.append('g')
@@ -225,9 +240,9 @@
 					hGuide.selectAll('line')
 						.style('stroke', '#000')
 
-			
+
 		};
-        
+
 
     </script>
   </body>
