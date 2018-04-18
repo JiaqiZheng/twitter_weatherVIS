@@ -13,61 +13,65 @@
   </head>
   <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
-
+    <script type="text/javascript">
+        function refreshPage(){
+          window.location.reload();
+        }
+    </script>
     <div id="chart" style="position: fixed; top: 0px; left: 0px"></div>
     <div id="tool" style="position: fixed; top: 100px; left: 1000px">
-      <select id="thedropdown">
+      <select id="thedropdown" onchange="refreshPage()">
         <option value="1">Precipitation</option>
         <option value="2">Average Temperature</option>
         <option value="3">Maximum Temperature</option>
         <option value="4">Minimum Temperature</option>
       </select>
-      <button onClick="refreshPage()">Apply</button>
+      <div id="color-bar-scale"></div>
     </div>
-    
+
     <script>
-    function refreshPage(){
-    window.location.reload();
-}
+
         d3.json("state_date_sent-more.json", function(error, data) {
             //read sentiment data
-                    var OHscores = [];
-                    var CAscores = [];
-                    var TXscores = [];
-                    var GAscores = [];
-                    var NYscores = [];
-                    var ILsocres = [];
-                    var AKsocres = [];
-                    var AZsocres = [];
-                    var FLsocres = [];
-                    var KYsocres = [];
-                    var MIsocres = [];
-                    var MNsocres = [];
-                    var MSsocres = [];
-                    var MOsocres = [];
-                    var NEsocres = [];
-                    var NVsocres = [];
-                    var NMsocres = [];
-                    var ORsocres = [];
+            var OHscores = [];
+            var CAscores = [];
+            var TXscores = [];
+            var GAscores = [];
+            var NYscores = [];
+            var ILscores = [];
+            var AKscores = [];
+            var AZscores = [];
+            var FLscores = [];
+            var KYscores = [];
+            var MIscores = [];
+            var MNscores = [];
+            var MSscores = [];
+            var MOscores = [];
+            var NEscores = [];
+            var NVscores = [];
+            var MNscores = [];
+            var NMscores = [];
+            var ORscores = [];
 
-                    var OHcounts = [];
-                    var CAcounts = [];
-                    var TXcounts = [];
-                    var GAcounts = [];
-                    var NYcounts = [];
-                    var ILcounts = [];
-                    var AKcounts = [];
-                    var AZcounts = [];
-                    var FLcounts = [];
-                    var KYcounts = [];
-                    var MIcounts = [];
-                    var MNcounts = [];
-                    var MScounts = [];
-                    var MOcounts = [];
-                    var NEcounts = [];
-                    var NVcounts = [];
-                    var NMcounts = [];
-                    var ORcounts = [];
+            var OHcounts = [];
+            var CAcounts = [];
+            var TXcounts = [];
+            var GAcounts = [];
+            var NYcounts = [];
+            var ILcounts = [];
+            var AKcounts = [];
+            var AZcounts = [];
+            var FLcounts = [];
+            var KYcounts = [];
+            var MIcounts = [];
+            var MNcounts = [];
+            var MScounts = [];
+            var MOcounts = [];
+            var NEcounts = [];
+            var NVcounts = [];
+            var NMcounts = [];
+            var NMcounts = [];
+            var ORcounts = [];
 
                     data.forEach(function(d) {
                         if (d.state == "OH"){
@@ -88,50 +92,114 @@
                         }
                         if (d.state == "NY"){
                             NYscores.push(d.score);
-                            NYcounts.push(d.count);
+                            NYcounts.push(d.count);    
                         }
+                        if (d.state == "IL"){
+                            ILscores.push(d.score);
+                            ILcounts.push(d.count);
+                        }
+                        if (d.state == "AK"){
+                            AKscores.push(d.score);
+                            AKcounts.push(d.count);
+                        }
+                        if (d.state == "AZ"){
+                            AZscores.push(d.score);
+                            AZcounts.push(d.count);
+                        }
+                        if (d.state == "FL"){
+                            FLscores.push(d.score);
+                            FLcounts.push(d.count);
+                        }
+                        if (d.state == "KY"){
+                            KYscores.push(d.score);
+                            KYcounts.push(d.count);
+                        }
+                        if (d.state == "MI"){
+                            MIscores.push(d.score);
+                            MIcounts.push(d.count);
+                        }
+                        if (d.state == "MN"){
+                            MNscores.push(d.score);
+                            MNcounts.push(d.count);
+                        }
+                        if (d.state == "MS"){
+                            MSscores.push(d.score);
+                            MScounts.push(d.count);
+                        }
+                        if (d.state == "MO"){
+                            MOscores.push(d.score);
+                            MOcounts.push(d.count);
+                        }
+                        if (d.state == "NE"){
+                            NEscores.push(d.score);
+                            NEcounts.push(d.count);
+                        }
+                        if (d.state == "NV"){
+                            NVscores.push(d.score);
+                            NVcounts.push(d.count);
+                        }
+                        if (d.state == "NM"){
+                            NMscores.push(d.score);
+                            NMcounts.push(d.count);
+                        }
+                        if (d.state == "OR"){
+                            ORscores.push(d.score);
+                            ORcounts.push(d.count);
+                        }
+                        
 
                     });
 
             //read weather data
             var a = document.getElementById("thedropdown");
 
-                    var states = ["CA","OH"];
-                    var State = "CA";
+                    var states = ["CA","TX","OH","GA","NY","IL","AK","AZ","FL","KY","MI","MN","MS","MO","NE","NV","NM","OR"];
                     var weather_type = a.value;
-                    var PRC = [];
-                    var AVGT = [];
-                    var MAXT = [];
-                    var MINT = [];
+                    var typename = ["Percipitation","avg T","Max T","Min T"]
+
                     d3.csv("weather.csv", function(data){
-                        var weather = [];
+                        var weather = [[],[],[],[],[],[],[],[],[],[],[],[]];
+
                         data.forEach(function(d){
-                            if (d.state==State){
+                        for(var i=0; i<states.length; i++) {
+                            if (d.state==states[i]){
                                 if (weather_type==1){
-                                    weather.push(parseFloat(d.PRC));
+                                    weather[i].push(parseFloat(d.PRC));
                                 }
                                 if (weather_type==2){
-                                    weather.push(parseFloat(d.AVGT));
+                                    weather[i].push(parseFloat(d.AVGT));
                                 }
                                 if (weather_type==3){
-                                    weather.push(parseFloat(d.MAXT));
+                                    weather[i].push(parseFloat(d.MAXT));
                                 }
                                 if (weather_type==4){
-                                    weather.push(parseFloat(d.MINT));
+                                    weather[i].push(parseFloat(d.MINT));
                                 }
                             }
+                          }
                         });
-                        var scores=CAscores;
-                        var counts=CAcounts;
-                        var CA_x=200;
-                        var CA_y=300;
-                        var X=CA_x;
-                        var Y=CA_y
-                        render_barchart(State,weather,scores,counts,X,Y);
-                        render_bars(State,weather,scores,counts,X,Y);
-                        render_bars(State,weather,OHscores,OHcounts,750,190);
-                        render_bars(State,weather,OHscores,OHcounts,650,390);
-                        render_bars(State,weather,OHscores,OHcounts,350,390);
+
+
+                        render_barchart();
+                        render_bars(states[0],weather[0], 0.8, CAscores, CAcounts,150,250,typename[weather_type]);
+                        render_bars(states[1],weather[1], 1.0, TXscores, TXcounts,500,390,typename[weather_type]);
+                        render_bars(states[2],weather[2], 0.5, OHscores, OHcounts,760,200,typename[weather_type]);
+                        render_bars(states[3],weather[3], 0.6, GAscores, GAcounts,770,350,typename[weather_type]);
+                        render_bars(states[4],weather[4], 0.5, NYscores, NYcounts,840,100,typename[weather_type]);   
+                        render_bars(states[5],weather[4], 0.4, ILscores, ILcounts,650,220,typename[weather_type]);
+                        render_bars(states[6],weather[4], 0.6, AKscores, AKcounts,175,450,typename[weather_type]);
+                        render_bars(states[7],weather[4], 0.6, AZscores, AZcounts,290,330,typename[weather_type]);
+                        render_bars(states[8],weather[4], 0.6, FLscores, FLcounts,800,450,typename[weather_type]);
+                        render_bars(states[9],weather[4], 0.3, KYscores, KYcounts,750,270,typename[weather_type]);
+                        render_bars(states[10],weather[4], 0.4, MIscores, MIcounts,750,150,typename[weather_type]);
+                        render_bars(states[11],weather[4], 0.4, MNscores, MNcounts,570,100,typename[weather_type]);
+                        render_bars(states[11],weather[4], 0.4, MSscores, MScounts,690,370,typename[weather_type]);
+                        render_bars(states[13],weather[4], 0.4, MOscores, MOcounts,620,260,typename[weather_type]);
+                        render_bars(states[14],weather[4], 0.45, NEscores, NEcounts,500,200,typename[weather_type]);
+                        render_bars(states[15],weather[4], 0.65, NVscores, NVcounts,240,200,typename[weather_type]);
+                        render_bars(states[16],weather[4], 0.6, NMscores, NMcounts,400,330,typename[weather_type]);
+                        render_bars(states[17],weather[4], 0.5, ORscores, ORcounts,190,90,typename[weather_type]);
+
 
 
 
@@ -139,23 +207,21 @@
                     })
             });
 
-        var render_barchart = function(State,weather,scores,count,X,Y){
-
-
+        var render_barchart = function(){
             //create canvas
             var Canvas = d3.select('#chart')
                             .append('svg')
                             .attr('width', 1000)
 					        .attr('height', 1000)
         };
-        var render_bars = function(State,weather,scores,count,X,Y){
-
+    var render_bars = function(State, weather, rSize, scores,count,X,Y,typename){
+            console.log(weather);
             var CA_x = X;
             var CA_y = Y;
 
             var H=100;
             var W=100;
-            var size = 0.50;
+            var size = rSize;
 
 			var height = H*size;
 			var width = W*size;
@@ -182,8 +248,13 @@
 			//create bars
 			var bars = d3.select('svg')
                         .append('g')
-                        .attr('transform','translate('+CA_x+','+CA_y+')')
-
+                        .attr('transform', 'translate('+CA_x+','+CA_y+')')
+                        .on('mouseover', function(d, i) {
+                          d3.select(this).attr('transform', 'translate('+CA_x+','+CA_y+') scale(2)')
+                        })
+                        .on('click', function(d, i) {
+                          d3.select(this).attr('transform', 'translate('+CA_x+','+CA_y+') scale(1)')
+                        })
                 bars.selectAll('rect')
                             .data(weather)
                             .enter()
@@ -202,6 +273,7 @@
                             .attr('y', function(d, i){
                                     return height - yScale(d)
                                 })
+
 
             // V Axis
             var vAxis = d3.svg.axis()
@@ -242,7 +314,60 @@
 
 
 		};
+        var CanvasColorScale = d3.select('#color-bar-scale')
+                    .append('svg')
+                    .attr('id',"color-scale")
+                    //.attr('position',inhert)
+                    .attr('width', 200)
+					.attr('height', 200)
 
+        var defs = CanvasColorScale.append("defs")
+        var gradient = defs.append("linearGradient")
+                        .attr("id", "svgGradient")
+                        .attr("x1", "0%")
+                        .attr("x2", "100%")
+                        //.attr("y1", "0%")
+                        //.attr("y2", "100%");
+        gradient.append("stop")
+                .attr('class', 'start')
+                .attr("offset", "0%")
+                .attr("stop-color", "red")
+                .attr("stop-opacity", 1);
+
+        gradient.append("stop")
+                .attr('class', 'middle')
+                .attr("offset", "39%")
+                .attr("stop-color", "#FFFFFF")
+                .attr("stop-opacity", 1);
+
+        gradient.append("stop")
+                .attr('class', 'end')
+                .attr("offset", "100%")
+                .attr("stop-color", "blue")
+                .attr("stop-opacity", 1);
+                    
+        var ColorScale = CanvasColorScale.append('rect')
+                    .style('fillStyle','grd')
+                    .style('fill', "url(#svgGradient)")
+                    .attr('width',250)
+                    .attr('height',30)
+                    .attr('x',1)
+                    .attr('y',20)
+        var ColorScaleLabel1 = CanvasColorScale.append('text')
+                    .attr("x", 1)
+                    .attr("y", 55)
+                    .attr("dy", ".35em")
+                    .text("1")
+        var ColorScaleLabel2 = CanvasColorScale.append('text')
+                    .attr("x", 185)
+                    .attr("y", 55)
+                    .attr("dy", ".35em")
+                    .text("-1")
+        var ColorScaleLabeltitle = CanvasColorScale.append('text')
+                    .attr("x", 55)
+                    .attr("y", 65)
+                    .attr("dy", ".35em")
+                    .text("Sentiment Score")
 
     </script>
   </body>
