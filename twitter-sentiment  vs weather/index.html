@@ -6,9 +6,10 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
 
-        body {
-            background-image: url("us.svg");
-            background-repeat: no-repeat;
+       
+
+        .graph-svg-component {
+            background-color: AliceBlue;
         }
 
         .y-axis path,
@@ -31,7 +32,16 @@
         .x-axis text {
             font-family: sans-serif;
         }
-
+        .toolTip {
+            position: absolute;
+            display: none;
+            min-width: 80px;
+            height: auto;
+            background: none repeat scroll 0 0 #ffffff;
+            border: 1px solid #6F257F;
+            padding: 14px;
+            text-align: center;
+            }
     </style>
   </head>
   <body>
@@ -41,6 +51,8 @@
           window.location.reload();
         }
     </script>
+    <object type="image/svg+xml" data="us.svg" id="map">
+    </object>
     <div id="chart" style="position: fixed; top: 0px; left: 0px"></div>
     <div id="tool" style="position: fixed; top: 100px; left: 1000px">
       <select id="thedropdown" onchange="refreshPage()">
@@ -53,135 +65,60 @@
     </div>
 
     <script>
+        var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+        var states=[ "AK","AL","AR","AZ","CA","CO","CT","DE",
+                    "FL","GA","HI","IA","ID","IL","IN","KS",
+                    "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", 
+                    "MS", "MT", "NC", "ND", "NE","NH", "NJ", "NM", 
+                    "NV", "NY", "OH", "OK", "OR", "PA",  "RI", "SC",
+                    "SD", "TN","TX","UT","VA", "VT", "WA", "WI",
+                    "WV", "WY"]
+        //get a rough location data from svg
+        var mapsvg = document.getElementById("map");
+        var x=[];
+        var y=[];
+        mapsvg.addEventListener("load",function(){
+            for (n=0; n<states.length;n++){
+                var svgDoc = mapsvg.contentDocument;
+                var pathpicked = svgDoc.getElementById(states[n]);
+                var svgd=pathpicked.getAttribute("d");
+                x.push(parseFloat(svgd.charAt(2)+svgd.charAt(3)+svgd.charAt(4)+svgd.charAt(5)+svgd.charAt(6)));
+                y.push(parseFloat(svgd.charAt(12)+svgd.charAt(13)+svgd.charAt(14)+svgd.charAt(15)+svgd.charAt(16)));
+            }
+            d3.json("state_date_sent-more-more.json", function(error, data) {
+            
+                //read sentiment data
+                var scores = [[],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[]];
+                var counts = [[],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[]];
+                data.forEach(function(d) {
+                    for (i = 0; i < states.length; i++) {
+    
+                        if (d.state == states[i]){
+                            scores[i].push(d.score);
+                            counts[i].push(d.count);
+                        }
+                    };
+                });
+                console.log(scores);
 
-        d3.json("state_date_sent-more.json", function(error, data) {
-            //read sentiment data
-            var OHscores = [];
-            var CAscores = [];
-            var TXscores = [];
-            var GAscores = [];
-            var NYscores = [];
-            var ILscores = [];
-            var AKscores = [];
-            var AZscores = [];
-            var FLscores = [];
-            var KYscores = [];
-            var MIscores = [];
-            var MNscores = [];
-            var MSscores = [];
-            var MOscores = [];
-            var NEscores = [];
-            var NVscores = [];
-            var MNscores = [];
-            var NMscores = [];
-            var ORscores = [];
-
-            var OHcounts = [];
-            var CAcounts = [];
-            var TXcounts = [];
-            var GAcounts = [];
-            var NYcounts = [];
-            var ILcounts = [];
-            var AKcounts = [];
-            var AZcounts = [];
-            var FLcounts = [];
-            var KYcounts = [];
-            var MIcounts = [];
-            var MNcounts = [];
-            var MScounts = [];
-            var MOcounts = [];
-            var NEcounts = [];
-            var NVcounts = [];
-            var NMcounts = [];
-            var NMcounts = [];
-            var ORcounts = [];
-
-                    data.forEach(function(d) {
-                        if (d.state == "OH"){
-                            OHscores.push(d.score);
-                            OHcounts.push(d.count);
-                        }
-                        if (d.state == "CA"){
-                            CAscores.push(d.score);
-                            CAcounts.push(d.count);
-                        }
-                        if (d.state == "TX"){
-                            TXscores.push(d.score);
-                            TXcounts.push(d.count);
-                        }
-                        if (d.state == "GA"){
-                            GAscores.push(d.score);
-                            GAcounts.push(d.count);
-                        }
-                        if (d.state == "NY"){
-                            NYscores.push(d.score);
-                            NYcounts.push(d.count);    
-                        }
-                        if (d.state == "IL"){
-                            ILscores.push(d.score);
-                            ILcounts.push(d.count);
-                        }
-                        if (d.state == "AK"){
-                            AKscores.push(d.score);
-                            AKcounts.push(d.count);
-                        }
-                        if (d.state == "AZ"){
-                            AZscores.push(d.score);
-                            AZcounts.push(d.count);
-                        }
-                        if (d.state == "FL"){
-                            FLscores.push(d.score);
-                            FLcounts.push(d.count);
-                        }
-                        if (d.state == "KY"){
-                            KYscores.push(d.score);
-                            KYcounts.push(d.count);
-                        }
-                        if (d.state == "MI"){
-                            MIscores.push(d.score);
-                            MIcounts.push(d.count);
-                        }
-                        if (d.state == "MN"){
-                            MNscores.push(d.score);
-                            MNcounts.push(d.count);
-                        }
-                        if (d.state == "MS"){
-                            MSscores.push(d.score);
-                            MScounts.push(d.count);
-                        }
-                        if (d.state == "MO"){
-                            MOscores.push(d.score);
-                            MOcounts.push(d.count);
-                        }
-                        if (d.state == "NE"){
-                            NEscores.push(d.score);
-                            NEcounts.push(d.count);
-                        }
-                        if (d.state == "NV"){
-                            NVscores.push(d.score);
-                            NVcounts.push(d.count);
-                        }
-                        if (d.state == "NM"){
-                            NMscores.push(d.score);
-                            NMcounts.push(d.count);
-                        }
-                        if (d.state == "OR"){
-                            ORscores.push(d.score);
-                            ORcounts.push(d.count);
-                        }
-                        
-
-                    });
-
-            //read weather data
-            var a = document.getElementById("thedropdown");
-
-                    var states = ["CA","TX","OH","GA","NY","IL","AK","AZ","FL","KY","MI","MN","MS","MO","NE","NV","NM","OR"];
-                    var weather_type = a.value;
-                    var typename = ["Percipitation","avg T","Max T","Min T"]
-
-                    d3.csv("weather.csv", function(data){
-                        var weather = [[],[],[],[],[],[],[],[],[],[],[],[]];
+                //read weather data
+                var a = document.getElementById("thedropdown");
+                var weather_type = a.value;
+                var typename = ["Percipitation","avg T","Max T","Min T"]
+                d3.csv("weather-all.csv", function(data){
+                    var weather = [[],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[]];
 
                         data.forEach(function(d){
                         for(var i=0; i<states.length; i++) {
@@ -200,43 +137,83 @@
                                 }
                             }
                           }
-                        });
+                        });  
+                        console.log(weather);
 
+                    render_barchart();
+                    //adjust the positions of barcharts
+                    var offsetx = new Array(50).fill(0);
+                    var offsety = new Array(50).fill(0);
+                    var rsize = new Array(50).fill(0.3);
+                    offsetx[0]=90;offsety[0]=-70;rsize[0]=0.7//AK
+                    offsetx[1]=25;offsety[1]=30;rsize[1]=0.3//AL
+                    offsetx[2]=-40;offsety[2]=20;rsize[2]=0.3//AR
+                    offsetx[3]=-35;offsety[3]=50;rsize[3]=0.3//AZ
+                    offsetx[4]=-10;offsety[4]=-90;rsize[4]=0.4//CA
+                    offsetx[5]=-60;offsety[5]=0;rsize[5]=0.6//CO
+                    offsetx[6]=0;offsety[6]=15;rsize[6]=0.1//CT 
+                    offsetx[7]=55;offsety[7]=30;rsize[7]=0.2//DE OUT
+                    offsetx[8]=5;offsety[8]=-70;rsize[8]=0.3///FL
+                    offsetx[9]=-30;offsety[9]=-30;rsize[9]=0.3//GA
+                    //HI
+                    offsetx[11]=-40;offsety[11]=0;rsize[11]=0.3//IA
+                    offsetx[12]=10;offsety[12]=100;rsize[12]=0.3//ID
+                    offsetx[13]=20;offsety[13]=40;rsize[13]=0.3//IL
+                    offsetx[14]=-10;offsety[14]=20;rsize[14]=0.3//IN
+                    offsetx[15]=-30;offsety[15]=-30;rsize[15]=0.3//KS
+                    offsetx[16]=70;offsety[16]=-45;rsize[16]=0.3//KY
+                    offsetx[17]=-35;offsety[17]=-40;rsize[17]=0.3//LA
+                    offsetx[18]=0;offsety[18]=-15;rsize[18]=0.1//MA 
+                    offsetx[19]=50;offsety[19]=30;rsize[19]=0.2//MD OUT
+                    offsetx[20]=5;offsety[20]=30;rsize[20]=0.3//MN
+                    offsetx[21]=35;offsety[21]=10;rsize[21]=0.3//MI
+                    offsetx[22]=35;offsety[22]=30;rsize[22]=0.3//MN
+                    offsetx[23]=-10;offsety[23]=40;rsize[23]=0.3//MO
+                    offsetx[24]=-20;offsety[24]=-60;rsize[24]=0.3//MS
+                    offsetx[25]=-100;offsety[25]=10;//MT
+                    offsetx[26]=-10;offsety[26]=-30;//NC
+                    offsetx[27]=-30;offsety[27]=10;//ND
+                    offsetx[28]=-30;offsety[28]=10;//NE
+                    offsetx[29]=15;offsety[29]=40;rsize[29]=0.1//NH 
+                    offsetx[30]=0;offsety[30]=-20;rsize[30]=0.2//NJ 
+                    offsetx[31]=-50;offsety[31]=30;//NM
+                    offsetx[32]=-30;offsety[32]=-50;//NV
+                    offsetx[33]=-50;offsety[33]=-40;//NY
+                    offsetx[34]=-20;offsety[34]=5;//OH
+                    offsetx[35]=-30;offsety[35]=10;//OK
+                    offsetx[36]=50;offsety[36]=50;//OR
+                    offsetx[37]=-50;offsety[37]=20;//PA
+                    offsetx[38]=20;offsety[38]=30;rsize[38]=0.2//RI OUT
+                    offsetx[39]=65;offsety[39]=10;//SC
+                    offsetx[40]=-30;offsety[40]=10;//SD
+                    offsetx[41]=-50;offsety[41]=15;//TN
+                    offsetx[42]=-30;offsety[42]=-130;rsize[42]=0.7///TX
+                    offsetx[43]=0;offsety[43]=60;//UT
+                    offsetx[44]=-20;offsety[44]=-20;//VA
+                    offsetx[45]=-5;offsety[45]=-30;rsize[45]=0.1//VT
+                    offsetx[46]=50;offsety[46]=-20;//WA
+                    offsetx[47]=-30;offsety[47]=10;//WV
+                    offsetx[48]=-5;offsety[48]=15;//WV
+                    offsetx[49]=-50;offsety[49]=0;//WY
 
-                        render_barchart();
-                        render_bars(states[0],weather[0], 0.8, CAscores, CAcounts,150,250,typename[weather_type]);
-                        render_bars(states[1],weather[1], 1.0, TXscores, TXcounts,500,390,typename[weather_type]);
-                        render_bars(states[2],weather[2], 0.5, OHscores, OHcounts,760,200,typename[weather_type]);
-                        render_bars(states[3],weather[3], 0.6, GAscores, GAcounts,770,350,typename[weather_type]);
-                        render_bars(states[4],weather[4], 0.5, NYscores, NYcounts,840,100,typename[weather_type]);   
-                        render_bars(states[5],weather[4], 0.4, ILscores, ILcounts,670,220,typename[weather_type]);
-                        render_bars(states[6],weather[4], 0.6, AKscores, AKcounts,175,450,typename[weather_type]);
-                        render_bars(states[7],weather[4], 0.6, AZscores, AZcounts,290,330,typename[weather_type]);
-                        render_bars(states[8],weather[4], 0.6, FLscores, FLcounts,800,450,typename[weather_type]);
-                        render_bars(states[9],weather[4], 0.3, KYscores, KYcounts,750,270,typename[weather_type]);
-                        render_bars(states[10],weather[4], 0.4, MIscores, MIcounts,730,150,typename[weather_type]);
-                        render_bars(states[11],weather[4], 0.4, MNscores, MNcounts,570,100,typename[weather_type]);
-                        render_bars(states[11],weather[4], 0.4, MSscores, MScounts,690,370,typename[weather_type]);
-                        render_bars(states[13],weather[4], 0.4, MOscores, MOcounts,620,260,typename[weather_type]);
-                        render_bars(states[14],weather[4], 0.45, NEscores, NEcounts,500,200,typename[weather_type]);
-                        render_bars(states[15],weather[4], 0.65, NVscores, NVcounts,240,200,typename[weather_type]);
-                        render_bars(states[16],weather[4], 0.6, NMscores, NMcounts,400,330,typename[weather_type]);
-                        render_bars(states[17],weather[4], 0.5, ORscores, ORcounts,190,90,typename[weather_type]);
-
-
-
-
-
+                    //generate 50 barcharts
+                    for (k=0; k<50;k++){
+                                render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
+                        }
                     })
             });
 
-        var render_barchart = function(){
+        }, false);
+
+        
+
+    var render_barchart = function(){
             //create canvas
             var Canvas = d3.select('#chart')
                             .append('svg')
                             .attr('width', 1000)
 					        .attr('height', 1000)
-        };
+    };
     var render_bars = function(State, weather, rSize, scores,count,X,Y,typename){
             var data=["Mar-3","Mar-4","Mar-5","Mar-6","Mar-7"];
             var CA_x = X;
@@ -264,10 +241,11 @@
 
             var colors1 = d3.scale.linear()
 				.domain([0,1])
-				.range(['#FFFFFF','#FF0000'])
+				.range([d3.rgb(0.865*255, 0.865*255, 0.865*255), d3.rgb(0.706*255, 0.016*255, 0.150*255)])
             var colors2 = d3.scale.linear()
 				.domain([-1,0])
-				.range(['#0000FF','#FFFFFF'])
+				.range([d3.rgb(0.230*255, 0.299*255, 0.754*255), d3.rgb(0.865*255, 0.865*255, 0.865*255)])
+            
             
             var vAxis = d3.svg.axis()
 				.scale(vScale)
@@ -281,9 +259,7 @@
 				.tickValues(hScale.domain().filter(function(d, i){
 					return !(i % (weather.length/5));
 				}));
-           
-			
-            
+ 
             //create bars
 			var graph = d3.select('svg')
                         .append('g')
@@ -291,9 +267,11 @@
                         .on('click', function(d, i) {
                           d3.select(this).attr('transform', 'translate('+CA_x+','+CA_y+') scale(2)')
                         })
-                        .on('click', function(d, i) {
+                        .on('dblclick', function(d, i) {
                           d3.select(this).attr('transform', 'translate('+CA_x+','+CA_y+') scale(1)')
                         })
+
+
             var bars = graph.append('g')
                 bars.selectAll('rect')
                             .data(weather)
@@ -313,12 +291,22 @@
                             .attr('y', function(d, i){
                                     return height - yScale(d)
                                 })
+                                .on("mousemove", function(d,i){
+                                    tooltip
+                                    .style("left", d3.event.pageX - 50 + "px")
+                                    .style("top", d3.event.pageY - 70 + "px")
+                                    .style("display", "inline-block")
+                                    .html((State) + "<br>" + "#Tweets" + (count[i]));
+                                })
+                                .on("mouseout", function(d){ tooltip.style("display", "none");});
+
                 var yAxes =bars.append('g')
                     .attr("class", "y-axis") 
                     .call(vAxis)
 
                 var xAxes = bars.append('g')
                     .attr("class", "x-axis") 
+                    .attr("transform", "translate(0," + width + ")")
                     .call(hAxis)
                 bars.append("text")
                         .attr("class", "x label")
@@ -326,8 +314,6 @@
                         .attr("dy", ".35em")
                         .attr("text","date")
                         .attr("tranform","translate(" + (width*0.5) + "," + (height*0.5) + ")")
-
-         
 
 
 		};
@@ -348,43 +334,44 @@
         gradient.append("stop")
                 .attr('class', 'start')
                 .attr("offset", "0%")
-                .attr("stop-color", "red")
+                .attr("stop-color", d3.rgb(0.230*255, 0.299*255, 0.754*255))
                 .attr("stop-opacity", 1);
 
         gradient.append("stop")
                 .attr('class', 'middle')
-                .attr("offset", "39%")
-                .attr("stop-color", "#FFFFFF")
+                .attr("offset", "50%")
+                .attr("stop-color", d3.rgb(0.865*255, 0.865*255, 0.865*255))
                 .attr("stop-opacity", 1);
 
         gradient.append("stop")
                 .attr('class', 'end')
                 .attr("offset", "100%")
-                .attr("stop-color", "blue")
+                .attr("stop-color", d3.rgb(0.706*255, 0.016*255, 0.150*255))
                 .attr("stop-opacity", 1);
                     
         var ColorScale = CanvasColorScale.append('rect')
                     .style('fillStyle','grd')
                     .style('fill', "url(#svgGradient)")
-                    .attr('width',250)
+                    .attr('width',200)
                     .attr('height',30)
                     .attr('x',1)
-                    .attr('y',20)
+                    .attr('y',65)
         var ColorScaleLabel1 = CanvasColorScale.append('text')
                     .attr("x", 1)
                     .attr("y", 55)
                     .attr("dy", ".35em")
-                    .text("1")
+                    .text("-1")
         var ColorScaleLabel2 = CanvasColorScale.append('text')
-                    .attr("x", 185)
+                    .attr("x", 190)
                     .attr("y", 55)
                     .attr("dy", ".35em")
-                    .text("-1")
-        var ColorScaleLabeltitle = CanvasColorScale.append('text')
-                    .attr("x", 55)
-                    .attr("y", 65)
+                    .text("1")
+        var ColorScaleLabel2 = CanvasColorScale.append('text')
+                    .attr("x", 50)
+                    .attr("y", 55)
                     .attr("dy", ".35em")
                     .text("Sentiment Score")
+
 
     </script>
   </body>
