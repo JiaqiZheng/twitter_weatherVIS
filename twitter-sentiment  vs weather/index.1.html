@@ -147,7 +147,7 @@
                     offsetx[3]=-35;offsety[3]=50;rsize[3]=0.3//AZ
                     offsetx[4]=-10;offsety[4]=-90;rsize[4]=0.4//CA
                     offsetx[5]=-60;offsety[5]=0;rsize[5]=0.6//CO
-                    offsetx[6]=0;offsety[6]=15;rsize[6]=0.2//CT 
+                    offsetx[6]=0;offsety[6]=15;rsize[6]=0.1//CT 
                     offsetx[7]=55;offsety[7]=30;rsize[7]=0.2//DE OUT
                     offsetx[8]=5;offsety[8]=-70;rsize[8]=0.3///FL
                     offsetx[9]=-30;offsety[9]=-30;rsize[9]=0.3//GA
@@ -159,7 +159,7 @@
                     offsetx[15]=-30;offsety[15]=-30;rsize[15]=0.3//KS
                     offsetx[16]=70;offsety[16]=-45;rsize[16]=0.3//KY
                     offsetx[17]=-35;offsety[17]=-40;rsize[17]=0.3//LA
-                    offsetx[18]=0;offsety[18]=-15;rsize[18]=0.2//MA 
+                    offsetx[18]=0;offsety[18]=-15;rsize[18]=0.1//MA 
                     offsetx[19]=50;offsety[19]=30;rsize[19]=0.2//MD OUT
                     offsetx[20]=5;offsety[20]=30;rsize[20]=0.3//MN
                     offsetx[21]=35;offsety[21]=10;rsize[21]=0.3//MI
@@ -170,7 +170,7 @@
                     offsetx[26]=-10;offsety[26]=-30;//NC
                     offsetx[27]=-30;offsety[27]=10;//ND
                     offsetx[28]=-30;offsety[28]=10;//NE
-                    offsetx[29]=15;offsety[29]=40;rsize[29]=0.2//NH 
+                    offsetx[29]=15;offsety[29]=40;rsize[29]=0.1//NH 
                     offsetx[30]=0;offsety[30]=-20;rsize[30]=0.2//NJ 
                     offsetx[31]=-50;offsety[31]=30;//NM
                     offsetx[32]=-30;offsety[32]=-50;//NV
@@ -186,7 +186,7 @@
                     offsetx[42]=-30;offsety[42]=-130;rsize[42]=0.7///TX
                     offsetx[43]=0;offsety[43]=60;//UT
                     offsetx[44]=-20;offsety[44]=-20;//VA
-                    offsetx[45]=-5;offsety[45]=-30;rsize[45]=0.2//VT
+                    offsetx[45]=-5;offsety[45]=-30;rsize[45]=0.1//VT
                     offsetx[46]=50;offsety[46]=-20;//WA
                     offsetx[47]=-30;offsety[47]=10;//WV
                     offsetx[48]=-5;offsety[48]=15;//WV
@@ -194,11 +194,7 @@
 
                     //generate 50 barcharts
                     for (k=0; k<50;k++){
-                        if(k==0 || k== 6 || k==7 || k==25 || k==27 || k== 29 || k==31 || k== 45 || k==47 || k==48 || k==49) {
-                            //render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
-                        } else {
-                            render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
-                        }
+                                render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
                         }
                     })
             });
@@ -259,11 +255,11 @@
             var colors2s = d3.scale.linear()
 				.domain([-1,0])
 				.range([d3.rgb(0.436*255, 0.308*255, 0.631*255), d3.rgb(0.865*255, 0.865*255, 0.865*255)])
-             
+           
             var vAxis = d3.svg.axis()
 				.scale(vScale)
 				.orient('left')
-				.ticks(3)
+				.ticks(2)
 
             var vAxisS = d3.svg.axis()
 				.scale(vScaleS)
@@ -286,7 +282,7 @@
                         .on('dblclick', function(d, i) {
                           d3.select(this).attr('transform', 'translate('+CA_x+','+CA_y+') scale(1)')
                         })
- 
+
 
             var bars = graph.append('g')
                 bars.selectAll('rect')
@@ -465,7 +461,7 @@
                 .attr("offset", "100%")
                 .attr("stop-color", d3.rgb(0.759*255, 0.334*255, 0.046*255))
                 .attr("stop-opacity", 1);
-                    
+                        
         var ColorScales = CanvasColorScale.append('rect')
                     .style('fillStyle','grd')
                     .style('fill', "url(#svgGradients)")
