@@ -6,8 +6,6 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
 
-       
-
         .graph-svg-component {
             background-color: AliceBlue;
         }
@@ -51,11 +49,16 @@
           window.location.reload();
         }
     </script>
-    <object type="image/svg+xml" data="us.svg" id="map">
+    <object type="image/svg+xml" data="us_label.svg" id="map" style="position: fixed; top: 100px; left: 200px; width: 981px; height: 588px;">
     </object>
-    <div id="chart" style="position: fixed; top: 0px; left: 0px"></div>
-    <div id="tool" style="position: fixed; top: 100px; left: 1000px">
-      <select id="thedropdown" onchange="refreshPage()">
+    <div id="title" style="position: fixed; left: 200px; ">
+        <h1>
+            United States Temperature-Sentiment Map (March)
+        </h1>
+    </div>
+    <div id="chart" style="position: fixed; top: 50px; left: 150px; width: 1200px; height: 600px; "></div>
+    <div id="tool" style="position: fixed; top: 100px; left: 0px">
+      <select style="position: fixed; top: 100px; width: 200px" id="thedropdown" onchange="refreshPage()">
         <option value="0">Average Temperature</option>
         <option value="1">Maximum Temperature</option>
         <option value="2">Minimum Temperature</option>
@@ -82,6 +85,7 @@
                 var pathpicked = svgDoc.getElementById(states[n]);
                 var svgd=pathpicked.getAttribute("d");
                 x.push(parseFloat(svgd.charAt(2)+svgd.charAt(3)+svgd.charAt(4)+svgd.charAt(5)+svgd.charAt(6)));
+                console.log(states[n]);
                 y.push(parseFloat(svgd.charAt(12)+svgd.charAt(13)+svgd.charAt(14)+svgd.charAt(15)+svgd.charAt(16)));
             }
             d3.json("state_date_sent-more-more.json", function(error, data) {
@@ -141,64 +145,60 @@
                     var offsetx = new Array(50).fill(0);
                     var offsety = new Array(50).fill(0);
                     var rsize = new Array(50).fill(0.3);
-                    offsetx[0]=90;offsety[0]=-70;rsize[0]=0.7//AK
-                    offsetx[1]=25;offsety[1]=30;rsize[1]=0.3//AL
-                    offsetx[2]=-40;offsety[2]=20;rsize[2]=0.3//AR
-                    offsetx[3]=-35;offsety[3]=50;rsize[3]=0.3//AZ
-                    offsetx[4]=-10;offsety[4]=-90;rsize[4]=0.4//CA
-                    offsetx[5]=-60;offsety[5]=0;rsize[5]=0.6//CO
-                    offsetx[6]=0;offsety[6]=15;rsize[6]=0.2//CT 
-                    offsetx[7]=55;offsety[7]=30;rsize[7]=0.2//DE OUT
-                    offsetx[8]=5;offsety[8]=-70;rsize[8]=0.3///FL
-                    offsetx[9]=-30;offsety[9]=-30;rsize[9]=0.3//GA
-                    //HI
-                    offsetx[11]=-40;offsety[11]=0;rsize[11]=0.3//IA
-                    offsetx[12]=10;offsety[12]=100;rsize[12]=0.3//ID
-                    offsetx[13]=20;offsety[13]=40;rsize[13]=0.3//IL
-                    offsetx[14]=-10;offsety[14]=20;rsize[14]=0.3//IN
-                    offsetx[15]=-30;offsety[15]=-30;rsize[15]=0.3//KS
-                    offsetx[16]=70;offsety[16]=-45;rsize[16]=0.3//KY
-                    offsetx[17]=-35;offsety[17]=-40;rsize[17]=0.3//LA
-                    offsetx[18]=0;offsety[18]=-15;rsize[18]=0.2//MA 
-                    offsetx[19]=50;offsety[19]=30;rsize[19]=0.2//MD OUT
-                    offsetx[20]=5;offsety[20]=30;rsize[20]=0.3//MN
-                    offsetx[21]=35;offsety[21]=10;rsize[21]=0.3//MI
-                    offsetx[22]=35;offsety[22]=30;rsize[22]=0.3//MN
-                    offsetx[23]=-10;offsety[23]=40;rsize[23]=0.3//MO
-                    offsetx[24]=-20;offsety[24]=-60;rsize[24]=0.3//MS
-                    offsetx[25]=-100;offsety[25]=10;//MT
-                    offsetx[26]=-10;offsety[26]=-30;//NC
-                    offsetx[27]=-30;offsety[27]=10;//ND
+                    offsetx[0]=40;offsety[0]=60;//AK
+                    offsetx[1]=60;offsety[1]=-20;//AL
+                    offsetx[2]=0;offsety[2]=50;//AR
+                    offsetx[3]=100;offsety[3]=30;//AZ
+                    offsetx[4]=-30;offsety[4]=-100;//CA
+                    offsetx[5]=0;offsety[5]=50;//CO
+                    offsetx[6]=50;offsety[6]=70;//CT 
+                    offsetx[7]=120;offsety[7]=70;//DE
+                    offsetx[8]=50;offsety[8]=80;///FL
+                    offsetx[9]=60;offsety[9]=100;//GA
+                    offsetx[10]=120;offsety[10]=30;//HI
+                    offsetx[11]=0;offsety[11]=40;//IA
+                    offsetx[12]=60;offsety[12]=-20;//ID
+                    offsetx[13]=20;offsety[13]=-40;//IL
+                    offsetx[14]=60;offsety[14]=-20;//IN
+                    offsetx[15]=0;offsety[15]=0;//KS
+                    offsetx[16]=0;offsety[16]=20;//KY
+                    offsetx[17]=-20;offsety[17]=20;//LA
+                    offsetx[18]=-170;offsety[18]=-60;//MA 
+                    offsetx[19]=20;offsety[19]=20;//MD
+                    offsetx[20]=0;offsety[20]=0;//ME
+                    offsetx[21]=120;offsety[21]=100;//MI
+                    offsetx[22]=80;offsety[22]=0;//MN
+                    offsetx[23]=-80;offsety[23]=50;//MO
+                    offsetx[24]=0;offsety[24]=-20;//MS
+                    offsetx[25]=0;offsety[25]=0;//MT
+                    offsetx[26]=0;offsety[26]=60;//NC
+                    offsetx[27]=-20;offsety[27]=-20;//ND
                     offsetx[28]=-30;offsety[28]=10;//NE
-                    offsetx[29]=15;offsety[29]=40;rsize[29]=0.2//NH 
-                    offsetx[30]=0;offsety[30]=-20;rsize[30]=0.2//NJ 
-                    offsetx[31]=-50;offsety[31]=30;//NM
-                    offsetx[32]=-30;offsety[32]=-50;//NV
-                    offsetx[33]=-50;offsety[33]=-60;//NY
-                    offsetx[34]=-20;offsety[34]=5;//OH
-                    offsetx[35]=-30;offsety[35]=10;//OK
-                    offsetx[36]=50;offsety[36]=50;//OR
-                    offsetx[37]=-50;offsety[37]=20;//PA
-                    offsetx[38]=20;offsety[38]=30;rsize[38]=0.2//RI OUT
+                    offsetx[29]=30;offsety[29]=20;//NH 
+                    offsetx[30]=50;offsety[30]=50;//NJ 
+                    offsetx[31]=50;offsety[31]=0;//NM
+                    offsetx[32]=30;offsety[32]=100;//NV
+                    offsetx[33]=0;offsety[33]=0;//NY
+                    offsetx[34]=0;offsety[34]=50;//OH
+                    offsetx[35]=120;offsety[35]=80;//OK
+                    offsetx[36]=-20;offsety[36]=-20;//OR
+                    offsetx[37]=-20;offsety[37]=20;//PA
+                    offsetx[38]=80;offsety[38]=20;//RI
                     offsetx[39]=65;offsety[39]=10;//SC
-                    offsetx[40]=-30;offsety[40]=10;//SD
-                    offsetx[41]=-50;offsety[41]=15;//TN
-                    offsetx[42]=-30;offsety[42]=-130;rsize[42]=0.7///TX
-                    offsetx[43]=0;offsety[43]=60;//UT
-                    offsetx[44]=-20;offsety[44]=-20;//VA
-                    offsetx[45]=-5;offsety[45]=-30;rsize[45]=0.2//VT
-                    offsetx[46]=50;offsety[46]=-20;//WA
-                    offsetx[47]=-30;offsety[47]=10;//WV
-                    offsetx[48]=-5;offsety[48]=15;//WV
-                    offsetx[49]=-50;offsety[49]=0;//WY
+                    offsetx[40]=-30;offsety[40]=-20;//SD
+                    offsetx[41]=-30;offsety[41]=50;//TN
+                    offsetx[42]=150;offsety[42]=150;///TX
+                    offsetx[43]=0;offsety[43]=-20;//UT
+                    offsetx[44]=0;offsety[44]=30;//VA
+                    offsetx[45]=20;offsety[45]=-20;//VT
+                    offsetx[46]=20;offsety[46]=-20;//WA
+                    offsetx[47]=0;offsety[47]=-50;//WI
+                    offsetx[48]=20;offsety[48]=50;//WV
+                    offsetx[49]=0;offsety[49]=80;//WY
 
                     //generate 50 barcharts
                     for (k=0; k<50;k++){
-                        if(k==0 || k== 6 || k==7 || k==25 || k==27 || k== 29 || k==31 || k== 45 || k==47 || k==48 || k==49) {
-                            //render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
-                        } else {
-                            render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
-                        }
+                        render_bars(states[k],weather[k], rsize[k], scores[k],counts[k],x[k]+offsetx[k],y[k]+offsety[k],typename[weather_type]);
                         }
                     })
             });
@@ -227,13 +227,13 @@
 			var width = W*size;
 
 			var yScale = d3.scale.linear()
-				.domain([0, 100])
+				.domain([0, 80])
 				.range([0, height]);
 			var xScale = d3.scale.ordinal()
 				.domain(d3.range(0, weather.length))
 				.rangeBands([0, width])
             var vScale = d3.scale.linear()
-				.domain([0, 100])
+				.domain([0, 80])
 				.range([height, 0]);
 			var hScale = d3.scale.ordinal()
 				.domain(d3.range(0, weather.length))
@@ -247,28 +247,29 @@
 				.range([height, height*2]);
 
             var colors1 = d3.scale.linear()
-				.domain([50, 100])
-				.range([d3.rgb(0.865*255, 0.865*255, 0.865*255), d3.rgb(0.706*255, 0.016*255, 0.150*255)])
+				.domain([40, 80])
+				.range([d3.rgb(227,105,5), d3.rgb(100,0,0)])
             var colors2 = d3.scale.linear()
-				.domain([0, 50])
-				.range([d3.rgb(0.230*255, 0.299*255, 0.754*255), d3.rgb(0.865*255, 0.865*255, 0.865*255)])
+				.domain([0, 40])
+				.range([d3.rgb(255,255,255), d3.rgb(227,105,5)])
 
             var colors1s = d3.scale.linear()
 				.domain([0,1])
-				.range([d3.rgb(0.865*255, 0.865*255, 0.865*255), d3.rgb(0.759*255, 0.334*255, 0.046*255)])
+				.range([d3.rgb(221,221,221), d3.rgb(177,1,39)])
             var colors2s = d3.scale.linear()
 				.domain([-1,0])
-				.range([d3.rgb(0.436*255, 0.308*255, 0.631*255), d3.rgb(0.865*255, 0.865*255, 0.865*255)])
+				.range([d3.rgb(85,72,193), d3.rgb(221,221,221)])
              
             var vAxis = d3.svg.axis()
 				.scale(vScale)
 				.orient('left')
-				.ticks(3)
+				.ticks(0)
 
             var vAxisS = d3.svg.axis()
 				.scale(vScaleS)
 				.orient('left')
-				.ticks(2)
+				.ticks(0)
+
 
             // H Axis
 			var hAxis = d3.svg.axis()
@@ -294,7 +295,7 @@
                             .enter()
                             .append('rect')
                             .style('fill', function(d, i){
-                                        if (weather[i]>=50){return colors1(weather[i])}
+                                        if (weather[i]>=40){return colors1(weather[i])}
                                         else {return colors2(weather[i])}
                                 })
                             .attr('width', xScale.rangeBand()*0.8)
@@ -330,9 +331,9 @@
                 bars.append("text")      // text label for the x axis
                     .style("font", "8px times")
                     .attr("x", width/2 )
-                    .attr("y",  0 )
+                    .attr("y",  height/4 )
                     .style("text-anchor", "middle")
-                    .text(typename);
+                    .text(states[k]);
 
 
             /* Sentiment */
@@ -376,15 +377,7 @@
                     .attr("class", "x-axis") 
                     .attr("transform", "translate(0," + width + ")")
                     .call(hAxis)
-                    
-                bars.append("text")      // text label for the x axis
-                    .style("font", "8px times")
-                    .attr("x", width/2 )
-                    .attr("y",  height*2 )
-                    .style("text-anchor", "middle")
-                    .text("Sentiment");
-
-            
+        
 		};
 
         /* color scale*/
@@ -404,19 +397,19 @@
         gradient.append("stop")
                 .attr('class', 'start')
                 .attr("offset", "0%")
-                .attr("stop-color", d3.rgb(0.230*255, 0.299*255, 0.754*255))
+                .attr("stop-color", d3.rgb(255,255,255))
                 .attr("stop-opacity", 1);
 
         gradient.append("stop")
                 .attr('class', 'middle')
                 .attr("offset", "50%")
-                .attr("stop-color", d3.rgb(0.865*255, 0.865*255, 0.865*255))
+                .attr("stop-color", d3.rgb(227,105,5))
                 .attr("stop-opacity", 1);
 
         gradient.append("stop")
                 .attr('class', 'end')
                 .attr("offset", "100%")
-                .attr("stop-color", d3.rgb(0.706*255, 0.016*255, 0.150*255))
+                .attr("stop-color", d3.rgb(100,0,0))
                 .attr("stop-opacity", 1);
                     
         var ColorScale = CanvasColorScale.append('rect')
@@ -432,10 +425,10 @@
                     .attr("dy", ".35em")
                     .text("0")
         var ColorScaleLabel2 = CanvasColorScale.append('text')
-                    .attr("x", 175)
+                    .attr("x", 180)
                     .attr("y", 55)
                     .attr("dy", ".35em")
-                    .text("100")
+                    .text("80")
         var ColorScaleLabel2 = CanvasColorScale.append('text')
                     .attr("x", 60)
                     .attr("y", 55)
@@ -451,19 +444,19 @@
         gradients.append("stop")
                 .attr('class', 'start')
                 .attr("offset", "0%")
-                .attr("stop-color", d3.rgb(0.436*255, 0.308*255, 0.631*255))
+                .attr("stop-color", d3.rgb(85,72,193))
                 .attr("stop-opacity", 1);
 
         gradients.append("stop")
                 .attr('class', 'middle')
                 .attr("offset", "50%")
-                .attr("stop-color", d3.rgb(0.865*255, 0.865*255, 0.865*255))
+                .attr("stop-color", d3.rgb(221,221,221))
                 .attr("stop-opacity", 1);
 
         gradients.append("stop")
                 .attr('class', 'end')
                 .attr("offset", "100%")
-                .attr("stop-color", d3.rgb(0.759*255, 0.334*255, 0.046*255))
+                .attr("stop-color", d3.rgb(177,1,39))
                 .attr("stop-opacity", 1);
                     
         var ColorScales = CanvasColorScale.append('rect')
