@@ -49,7 +49,7 @@
           window.location.reload();
         }
     </script>
-    <object type="image/svg+xml" data="us_label.svg" id="map" style="position: fixed; top: 100px; left: 200px; width: 981px; height: 588px;">
+    <object type="image/svg+xml" data="us_label-2.svg" id="map" style="position: fixed; top: 100px; left: 200px; width: 981px; height: 588px;">
     </object>
     <div id="title" style="position: fixed; left: 200px; ">
         <h1>
@@ -81,12 +81,23 @@
         var y=[];
         mapsvg.addEventListener("load",function(){
             for (n=0; n<states.length;n++){
-                var svgDoc = mapsvg.contentDocument;
-                var pathpicked = svgDoc.getElementById(states[n]);
-                var svgd=pathpicked.getAttribute("d");
-                x.push(parseFloat(svgd.charAt(2)+svgd.charAt(3)+svgd.charAt(4)+svgd.charAt(5)+svgd.charAt(6)));
-                console.log(states[n]);
-                y.push(parseFloat(svgd.charAt(12)+svgd.charAt(13)+svgd.charAt(14)+svgd.charAt(15)+svgd.charAt(16)));
+                if (n!=23){
+                    var svgDoc = mapsvg.contentDocument;
+                    var pathpicked = svgDoc.getElementById(states[n]);
+                    var svgd=pathpicked.getAttribute("d");
+                    x.push(parseFloat(svgd.charAt(2)+svgd.charAt(3)+svgd.charAt(4)+svgd.charAt(5)+svgd.charAt(6)));
+                    console.log(states[n]);
+
+                    y.push(parseFloat(svgd.charAt(12)+svgd.charAt(13)+svgd.charAt(14)+svgd.charAt(15)+svgd.charAt(16)));
+                    console.log(y[n]);
+
+                }
+                else{
+                    x.push(650);
+                    y.push(261);
+                    console.log(states[n]);
+                    console.log(y[n]);
+                }
             }
             d3.json("state_date_sent-more-more.json", function(error, data) {
             
@@ -145,27 +156,27 @@
                     var offsetx = new Array(50).fill(0);
                     var offsety = new Array(50).fill(0);
                     var rsize = new Array(50).fill(0.3);
-                    offsetx[0]=40;offsety[0]=60;//AK
+                    offsetx[0]=20;offsety[0]=60;//AK
                     offsetx[1]=60;offsety[1]=-20;//AL
                     offsetx[2]=0;offsety[2]=50;//AR
                     offsetx[3]=100;offsety[3]=30;//AZ
                     offsetx[4]=-30;offsety[4]=-100;//CA
                     offsetx[5]=0;offsety[5]=50;//CO
-                    offsetx[6]=50;offsety[6]=70;//CT 
-                    offsetx[7]=120;offsety[7]=70;//DE
+                    offsetx[6]=50;offsety[6]=75;rsize[6]=0.2//CT 
+                    offsetx[7]=120;offsety[7]=70;rsize[7]=0.2//DE
                     offsetx[8]=50;offsety[8]=80;///FL
-                    offsetx[9]=60;offsety[9]=100;//GA
-                    offsetx[10]=120;offsety[10]=30;//HI
+                    offsetx[9]=60;offsety[9]=80;//GA
+                    offsetx[10]=120;offsety[10]=50;//HI
                     offsetx[11]=0;offsety[11]=40;//IA
                     offsetx[12]=60;offsety[12]=-20;//ID
                     offsetx[13]=20;offsety[13]=-40;//IL
-                    offsetx[14]=60;offsety[14]=-20;//IN
-                    offsetx[15]=0;offsety[15]=0;//KS
+                    offsetx[14]=60;offsety[14]=-40;//IN
+                    offsetx[15]=0;offsety[15]=-10;//KS
                     offsetx[16]=0;offsety[16]=20;//KY
                     offsetx[17]=-20;offsety[17]=20;//LA
-                    offsetx[18]=-170;offsety[18]=-60;//MA 
-                    offsetx[19]=20;offsety[19]=20;//MD
-                    offsetx[20]=0;offsety[20]=0;//ME
+                    offsetx[18]=-165;offsety[18]=-50;rsize[18]=0.2//MA 
+                    offsetx[19]=110;offsety[19]=95;rsize[19]=0.2//MD
+                    offsetx[20]=0;offsety[20]=8;//ME
                     offsetx[21]=120;offsety[21]=100;//MI
                     offsetx[22]=80;offsety[22]=0;//MN
                     offsetx[23]=-80;offsety[23]=50;//MO
@@ -173,26 +184,26 @@
                     offsetx[25]=0;offsety[25]=0;//MT
                     offsetx[26]=0;offsety[26]=60;//NC
                     offsetx[27]=-20;offsety[27]=-20;//ND
-                    offsetx[28]=-30;offsety[28]=10;//NE
-                    offsetx[29]=30;offsety[29]=20;//NH 
-                    offsetx[30]=50;offsety[30]=50;//NJ 
-                    offsetx[31]=50;offsety[31]=0;//NM
+                    offsetx[28]=-30;offsety[28]=0;//NE
+                    offsetx[29]=-150;offsety[29]=-70;rsize[29]=0.2//NH 
+                    offsetx[30]=50;offsety[30]=52;rsize[30]=0.2//NJ 
+                    offsetx[31]=50;offsety[31]=-20;//NM
                     offsetx[32]=30;offsety[32]=100;//NV
-                    offsetx[33]=0;offsety[33]=0;//NY
-                    offsetx[34]=0;offsety[34]=50;//OH
-                    offsetx[35]=120;offsety[35]=80;//OK
-                    offsetx[36]=-20;offsety[36]=-20;//OR
-                    offsetx[37]=-20;offsety[37]=20;//PA
-                    offsetx[38]=80;offsety[38]=20;//RI
-                    offsetx[39]=65;offsety[39]=10;//SC
+                    offsetx[33]=25;offsety[33]=-20;//NY
+                    offsetx[34]=0;offsety[34]=60;//OH
+                    offsetx[35]=120;offsety[35]=65;//OK
+                    offsetx[36]=-20;offsety[36]=-30;//OR
+                    offsetx[37]=-20;offsety[37]=10;//PA
+                    offsetx[38]=90;offsety[38]=30;rsize[38]=0.2//RI
+                    offsetx[39]=55;offsety[39]=0;//SC
                     offsetx[40]=-30;offsety[40]=-20;//SD
                     offsetx[41]=-30;offsety[41]=50;//TN
                     offsetx[42]=150;offsety[42]=150;///TX
                     offsetx[43]=0;offsety[43]=-20;//UT
                     offsetx[44]=0;offsety[44]=30;//VA
-                    offsetx[45]=20;offsety[45]=-20;//VT
+                    offsetx[45]=-70;offsety[45]=-55;rsize[45]=0.2//VT
                     offsetx[46]=20;offsety[46]=-20;//WA
-                    offsetx[47]=0;offsety[47]=-50;//WI
+                    offsetx[47]=0;offsety[47]=-30;//WI
                     offsetx[48]=20;offsety[48]=50;//WV
                     offsetx[49]=0;offsety[49]=80;//WY
 
@@ -308,15 +319,15 @@
                             .attr('y', function(d, i){
                                     return height - yScale(d)
                                 })
-                                .on("mousemove", function(d,i){
-                                    tooltip
-                                    .style("left", d3.event.pageX - 50 + "px")
-                                    .style("top", d3.event.pageY - 70 + "px")
-                                    .style("display", "inline-block")
-                                    .html((State) + "<br>" + "#Temp(F): " + parseInt(weather[i]));
+                                //.on("mousemove", function(d,i){
+                                //    tooltip
+                                //    .style("left", d3.event.pageX - 50 + "px")
+                                //    .style("top", d3.event.pageY - 70 + "px")
+                                //    .style("display", "inline-block")
+                                //    .html((State) + "<br>" + "#Temp(F): " + parseInt(weather[i]));
                                     
-                                })
-                                .on("mouseout", function(d){ tooltip.style("display", "none");});
+                                //})
+                                //.on("mouseout", function(d){ tooltip.style("display", "none");});
                                 
                 var yAxes =bars.append('g')
                     .style("font", "8px times")
@@ -349,8 +360,9 @@
                                 })
                             .attr('width', xScale.rangeBand()*0.8)
                             .attr('height', function(d, i){
-                                if(count[i]>0) {return yScaleS(d);}
-                                else {return 0}
+                                //if(count[i]>0) {return yScaleS(d);}
+                                //else {return 0}
+                                return yScaleS(d)
                                 })
                             .attr('x', function(d, i){
                                     return xScale(i);
